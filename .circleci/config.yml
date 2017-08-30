@@ -37,7 +37,7 @@ jobs:
       - store_artifacts:
           path: test-results.xml
           prefix: tests
-      - store_test_result:
+      - store_test_results:
           path: test-results
           prefix: test
       - store_artifacts:
