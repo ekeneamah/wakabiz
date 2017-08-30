@@ -38,7 +38,7 @@ jobs:
           path: test-results.xml
           prefix: tests
       - store_test_result:
-          path: test-results.xml
+          path: test-results
           prefix: test
       - store_artifacts:
           path: coverage
