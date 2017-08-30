@@ -18,6 +18,7 @@ jobs:
       - run:
           name: Install npm wee
           command: npm install
+   
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
@@ -31,23 +32,19 @@ jobs:
       - run:
           name: Test
           command: npm test
+      - run: mkdir ~/test-results
       - run:
           name: Generate code coverage
           command: './node_modules/.bin/nyc report --reporter=text-lcov'
-       - run: npm install
-       - run: mkdir ~/junit
-       - run: 
-          command: mocha test --reporter mocha-junit-reporter
-          environment:
-            MOCHA_FILE: junit/test-results.xml
-          when: always
-        - store_test_results:
-            path: ~/junit
-        - store_artifacts:
-            path: ~/junit 
-        - store_artifacts:
-            path: coverage
-            prefix: coverage
+      - store_artifacts:
+          path: test-results.xml
+          prefix: tests
+      - store_test_results:
+          path: test-results
+          prefix: test
+      - store_artifacts:
+          path: coverage
+          prefix: coverage
       
 workflows:
   version: 2
