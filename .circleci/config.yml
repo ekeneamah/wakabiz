@@ -39,7 +39,12 @@ jobs:
       - store_artifacts:
           path: coverage
           prefix: coverage
-      
+      load_code: &load_code
+    run:
+      name: load code from workspace
+      command: |
+        # Move all files and dotfiles to current directory
+        mv /tmp/workspace/frontend/* /tmp/workspace/frontend/.[!.]* .
 workflows:
   version: 2
   build_and_test:
