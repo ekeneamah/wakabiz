@@ -18,8 +18,7 @@ jobs:
       - run:
           name: Update npm
           command: 'sudo npm install -g npm@latest'
-      - store_test_results:
-         path: /tmp/test-results
+      
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
@@ -47,6 +46,8 @@ jobs:
       - store_artifacts:
           path: coverage
           prefix: coverage
+       - store_test_results:
+         path: test-results
       
 workflows:
   version: 2
