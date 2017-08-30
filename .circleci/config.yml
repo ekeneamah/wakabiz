@@ -20,7 +20,7 @@ references:
       command: |
         # Move all files and dotfiles to current directory
         mkdir /frontend/
-        mv /tmp/workspace/frontend/* /frontend/
+        mv wakabiz/* /frontend/
       
   jars_cache_key: &jars_cache_key
     key: v7-dependency-jars-{{ checksum "project.clj" }}
