@@ -32,7 +32,7 @@ jobs:
       - run:
           name: Test
           command: npm test
-      - run: mkdir ~/test-results
+      - run: mkdir ~/test-result
       - run:
           name: Generate code coverage
           command: './node_modules/.bin/nyc report --reporter=text-lcov'
