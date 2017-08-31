@@ -1,57 +1,34 @@
 version: 2
 jobs:
   build:
+    
+    working_directory: ~/circleci-demo-java-spring
+
     docker:
-      - image: ubuntu:14.04
-
-      - image: mongo:2.6.8
-        command: [mongod, --smallfiles]
-
-      - image: postgres:9.4.1
-        # some containers require setting environment variables
+      - image: circleci/openjdk:8-jdk-browsers
+      - image: circleci/postgres:9.6.3-alpine
         environment:
           POSTGRES_USER: root
-
-      - image: redis@sha256:54057dd7e125ca41afe526a877e8bd35ec2cdd33b9217e022ed37bdcf7d09673
-
-      - image: rabbitmq:3.5.4
-
-    environment:
-      TEST_REPORTS: /tmp/test-reports
-
-    working_directory: ~/my-project
-
-    branches:
-      ignore:
-        - develop
-        - /feature-.*/
+          POSTGRES_DB: circle_test
 
     steps:
+
+      - checkout
+
+      - restore_cache:
+          key: circleci-demo-java-spring-{{ checksum "pom.xml" }}
+      
+      - run: mvn dependency:go-offline
       
       - save_cache:
-          key: v1-my-project-{{ checksum "project.clj" }}
           paths:
             - ~/.m2
-
-      # Deploy staging
-      - deploy:
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "staging" ];
-              then ansible-playbook site.yml -i staging;
-            fi
-
-      # Deploy production
-      - deploy:
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ];
-              then ansible-playbook site.yml -i production;
-            fi
-
-      # Save artifacts
-      - store_artifacts:
-          path: /tmp/artifacts
-          destination: build
-
-      # Upload test results
+          key: circleci-demo-java-spring-{{ checksum "pom.xml" }}
+      
+      - run: mvn package
+      
       - store_test_results:
-          path: /tmp/test-reports
+          path: target/surefire-reports
+      
+      - store_artifacts:
+          path: target/demo-java-spring-0.0.1-SNAPSHOT.jar
